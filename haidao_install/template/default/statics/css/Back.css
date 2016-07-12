@@ -40,7 +40,7 @@
 }
 .choose-way{
 	width: 100%;
-	
+
 }
 .choose-way label{
 	display: block;
@@ -75,7 +75,7 @@
 	margin-left: 158px;
 	width: 100px;
 	height: 32px;
-	background: #1380cb;
+	background: #F69738;
 	line-height: 32px;
 	border-radius: 4px;
 	cursor: pointer;
@@ -194,7 +194,7 @@
 	margin-left: 155px;
 	width: 100px;
 	height: 32px;
-	background: #1380cb;
+	background: #F69738;
 	line-height: 32px;
 	border-radius: 4px;
 	cursor: pointer;
@@ -202,4 +202,3 @@
 .code-btn:hover {
 	background: #2ca0f0;
 }
-
