@@ -6,7 +6,7 @@
 	?>
 		<div class="fixed-nav layout">
 			<ul>
-				<li class="first">后台首页</li>
+				<li class="first">관리자메인</li>
 				<li class="spacer-gray"></li>
 			</ul>
 			<div class="hr-gray"></div>
@@ -30,18 +30,18 @@
 					<table cellpadding="0" cellspacing="0" class="border bg-white layout">
 						<tbody>
 							<tr class="bg-gray-white line-height-40 border-bottom">
-								<th class="text-left padding-big-left">待办事项</th>
+								<th class="text-left padding-big-left">처리사항</th>
 							</tr>
 							<tr class="border">
 								<td class="padding-big-left padding-big-right padding-bottom">
 									<table cellpadding="0" cellspacing="0" class="layout">
 										<tbody>
 											<tr class="line-height-40">
-												<th class="text-left" colspan="3">订单提醒</th>
+												<th class="text-left" colspan="3">주문알림</th>
 											</tr>
 											<tr class="text-lh-big">
-												<td>待付款订单：<a href="<?php echo url('order/admin_order/index',array('type' => 1)) ?>" title="点击去查看"><b class="text-main" data-id="pay">0</b></a></td>
-												<td>待确认订单：<a href="<?php echo url('order/admin_order/index',array('type' => 2)) ?>" title="点击去查看"><b class="text-main" data-id="confirm">0</b></a></td>
+												<td>입금대기중 상품：<a href="<?php echo url('order/admin_order/index',array('type' => 1)) ?>" title="点击去查看"><b class="text-main" data-id="pay">0</b></a></td>
+												<td>확인대기중 상품：<a href="<?php echo url('order/admin_order/index',array('type' => 2)) ?>" title="点击去查看"><b class="text-main" data-id="confirm">0</b></a></td>
 												<td>待发货订单：<a href="<?php echo url('order/admin_order/index',array('type' => 3)) ?>" title="点击去查看"><b class="text-main" data-id="delivery">0</b></a></td>
 											</tr>
 											<tr class="text-lh-big">

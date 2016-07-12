@@ -50,7 +50,7 @@ h1 small,.h1 small,h2 small,.h2 small,h3 small,.h3 small{font-size:60%;filter:al
 h4 small,.h4 small,h5 small,.h5 small,h6 small,.h6 small{font-size:12px;filter:alpha(opacity=60);opacity:.6;}
 /*自定义链接颜色(可自由更换)*/
 a{color:#333;text-decoration:none;} /*链接-颜色*/
-a:hover{color:#1380cb;} /*链接-悬浮颜色*/
+a:hover{color:#F69738;} /*链接-悬浮颜色*/
 .text-underline:hover {text-decoration:underline;}
 /*段落*/
 p,.p{line-height:25px;}
@@ -73,8 +73,8 @@ p,.p{line-height:25px;}
 .text-small{font-size:12px !important;}
 .text-little{font-size:10px !important;}
 /*字体颜色*/
-.text-main{color:#2a95de;}/*主色*/
-.text-sub{color:#1380cb;}/*辅色*/
+.text-main{color:#F89828;}/*主色*/
+.text-sub{color:#F69738;}/*辅色*/
 .text-dot{color:#ff5a00;}/*点缀色*/
 .text-mix{color:#d93600;}/*融合色*/
 .text-white{color:#fff;}/*白色*/
@@ -93,8 +93,8 @@ p,.p{line-height:25px;}
 .text-lh-large{line-height: 28px;}
 /***input***/
 .input{font-size:14px;padding:6px;border:solid 1px #ccc;width:100%;height:34px;line-height:20px;display:block;background-color: #fff; -webkit-appearance:none;/*transition:all 1s;*/}
-.input:focus,.input-focus{border-color:#2a95de;background-color:#f5f8fd;/*transition:all 0.3s*/}
-.input:hover,.input-hover{border-color:#2a95de;}
+.input:focus,.input-focus{border-color:#F89828;background-color:#f5f8fd;/*transition:all 0.3s*/}
+.input:hover,.input-hover{border-color:#F89828;}
 .input-error,.input-error:hover{border-color:#d93600;}
 .input-error:focus{border-color:#d93600;background-color:#fff;}
 .input-disabled, .input-disabled:hover, .input[disabled], .input[disabled]:hover {border-color:#999;background-color: #eee;}
@@ -106,11 +106,11 @@ p,.p{line-height:25px;}
 .button.bg-black,.button.bg-dark-grey,.button.bg-main,.button.bg-dot,.button.bg-gray,.button.bg-light-gray,.button.bg-sub,.button.bg-mix,.button.bg-pink,.button.bg-red,.button.bg-orange,.button.bg-blue,.button.bg-green {color:#fff;border:0;}
 .button.bg-black:hover{background:#222;}
 .button.bg-dark-grey:hover{background:#444;}
-.button.bg-main:hover{background:#1380cb;}
+.button.bg-main:hover{background:#F69738;}
 .button.bg-dot:hover{background:#d93600;}
 .button.bg-gray:hover{background:#aaa;}
 .button.bg-light-gray:hover{background:#aaa;}
-.button.bg-sub:hover{background:#2a95de;}
+.button.bg-sub:hover{background:#F89828;}
 .button.bg-mix:hover{background:#ff5a00;}
 .button.bg-white:hover{background:#f1f1f1;}
 .button.bg-gray-white:hover{background:#fff;}
@@ -124,17 +124,17 @@ p,.p{line-height:25px;}
 .button.border-light-gray:hover{background:#ccc;}
 .button.border-gray:hover{background:#999;}
 .button.border-black:hover{background:#000;}
-.button.border-main:hover{background:#2a95de;}
-.button.border-sub:hover{background:#1380cb;}
+.button.border-main:hover{background:#F89828;}
+.button.border-sub:hover{background:#F69738;}
 .button.border-mix:hover{background: #d93600;}
 .button.border-dot:hover{background: #ff5a00;}
 /***select***/
 .select{width:100%;height:26px;border:1px solid #ccc;}
-.select:focus,.select:hover{border-color:#2a95de;}
+.select:focus,.select:hover{border-color:#F89828;}
 /***textarea***/
 .textarea{border:1px solid #ccc;resize: none;}
-.textarea:hover{border-color:#2a95de;}
-.textarea:focus{border-color:#2a95de;background-color:#f5f8fd;}
+.textarea:hover{border-color:#F89828;}
+.textarea:focus{border-color:#F89828;background-color:#f5f8fd;}
 /***margin***/
 /***border***/
 .border{border:solid 1px #ddd;}
@@ -160,8 +160,8 @@ p,.p{line-height:25px;}
 .border-gray-white { border-color: #eee; }
 .border-light-gray { border-color:#ccc; }
 .border-gray { border-color:#999; }
-.border-main { border-color:#2a95de; }
-.border-sub{border-color:#1380cb;}
+.border-main { border-color:#F89828; }
+.border-sub{border-color:#F69738;}
 .border-mix{border-color: #d93600;}
 .border-dot{border-color: #ff5a00;}
 .border-white{border-color: #fff;}
@@ -182,8 +182,8 @@ p,.p{line-height:25px;}
 .bg-black{background: #000;}
 .bg-white{background: #fff;}
 .bg-gray-white{background: #f7f7f7;}
-.bg-main{background: #2a95de;}
-.bg-sub{background: #1380cb;}
+.bg-main{background: #F89828;}
+.bg-sub{background: #F69738;}
 .bg-mix{background: #d93600;}
 .bg-dot{background: #ff5a00;}
 .bg-pink{background: #e13538;}

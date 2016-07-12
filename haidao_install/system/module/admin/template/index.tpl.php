@@ -33,7 +33,7 @@
 		</div>
 		<div class="welcome layout">
 			<ul class="clearfix">
-				<li><p>欢迎您：<?php echo $this->admin['username']?></p></li>
+				<li><p>안녕하세요：<?php echo $this->admin['username']?></p></li>
 				<li class="spacer-gray"></li>
 				<li><a href="<?php echo url('admin_setup/edit')?>" data-frame="main_frame">账户管理</a></li>
 				<li class="spacer-gray"></li>
