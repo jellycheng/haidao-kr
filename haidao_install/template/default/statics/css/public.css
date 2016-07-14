@@ -86,6 +86,7 @@ img { display: block; }
 /***header***/
 .header { position: relative; height: 104px; }
 .logo { margin: 20px 0; height: 64px; }
+.logo img {width:190px;}
 .search-wrap { position: absolute; top: 28px; right: 345px; width: 511px; }
 .keyword { line-height: 12px; }
 .keyword li { float: left; }
@@ -242,7 +243,7 @@ img { display: block; }
 .item-info .item-btn.disabled { background-color: #999; }
 .item-info .cart-btn.disabled { background-color: #999; }
 /*加入购物车按钮*/
-.item-btn { width: 160px; text-align: left; color: #fff; line-height: 24px; background-color: #046bb3; }
+.item-btn { width: 160px; text-align: left; color: #fff; line-height: 24px; background-color: #ea8b2c; }
 .item-btn i { float: left; margin: 5px 17px 5px 10px; width: 14px; height: 14px; }
 .item-btn svg { display: block; }
 .item-btn:hover { color: #fff; background-color: #F69738; }

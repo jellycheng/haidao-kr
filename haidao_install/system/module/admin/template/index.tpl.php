@@ -23,7 +23,7 @@
 			<div class="logo"><img src="./statics/images/logo.png" /></div>
 			<div class="site-menu border-menu">
 				<ul>
-					<li><a class="current" href="javascript:;" data-id="0">首页</a></li>
+					<li><a class="current" href="javascript:;" data-id="0">홈</a></li>
 					<?php foreach ($nodes as $node): if(!$node['_child']) continue; ?>
 					<li><a href="javascript:;" data-id="<?php echo $node['id'] ?>"><?php echo $node['name'] ?></a></li>
 					<?php endforeach ?>
@@ -35,29 +35,27 @@
 			<ul class="clearfix">
 				<li><p>안녕하세요：<?php echo $this->admin['username']?></p></li>
 				<li class="spacer-gray"></li>
-				<li><a href="<?php echo url('admin_setup/edit')?>" data-frame="main_frame">账户管理</a></li>
+				<li><a href="<?php echo url('admin_setup/edit')?>" data-frame="main_frame">계정관리</a></li>
 				<li class="spacer-gray"></li>
-				<li><a href="<?php echo __APP__ ?>" target="_blank">网站前台</a></li>
+				<li><a href="<?php echo __APP__ ?>" target="_blank">쇼핑몰바로가기</a></li>
 				<li class="spacer-gray"></li>
-				<li><a href="<?php echo url('cache/clear');?>" data-frame="main_frame">更新缓存</a></li>
+				<li><a href="<?php echo url('cache/clear');?>" data-frame="main_frame">캐시갱신</a></li>
 				<li class="spacer-gray"></li>
-				<li><a href="<?php echo url('public/logout'); ?>">安全退出</a></li>
-			</ul>
-			<div class="hr-gray"></div>
+				<li><a href="<?php echo url('public/logout'); ?>">로그아웃
 		</div>
 		<div class="side">
 			<div class="head border radius border-small padding-little">
 				<img src="<?php echo $this->admin['avatar'] ? $this->admin['avatar'] : __ROOT__.'statics/images/head.jpg'?>" />
 			</div>
 			<div class="hr-black"></div>
-			<h3 class="side-top text-small text-white">角色：<?php echo $this->admin['group_name']?></h3>
-			<div class="custom-menu"><em class="ico_left_arrow"></em>自定义快捷菜单</div>
+			<h3 class="side-top text-small text-white">사용자：<?php echo $this->admin['group_name']?></h3>
+			<div class="custom-menu"><em class="ico_left_arrow"></em>즐겨찾는 메뉴</div>
 			<div id="side-scroll">
 				<div class="side-menu-height">
 					<div class="hr-blue"></div>
 					<ul data-submenu="0">
 						<li class="custom-wrap">
-							<a class="focus" href="<?php echo url('home'); ?>">后台首页<em class="ico_set fr custom-link margin-right" style="margin-top:6px;"></em></a>
+							<a class="focus" href="<?php echo url('home'); ?>">관리자메인<em class="ico_set fr custom-link margin-right" style="margin-top:6px;"></em></a>
 						</li>
 						<div id="diy_menu">
 						<?php foreach ($menus as $menu): ?>
@@ -84,7 +82,7 @@
 				<a class="bottom" href="javascript:;"></a>
 			</div>
 			<div class="copy">
-				<p>Powered by <a href="javascript:;" target="_blank">Haidao</a><br/>Copyright 2013-2016 Dmibox</p>
+				<p>Powered by <a href="javascript:;" target="_blank">iNBAY</a><br/>Copyright 2016</p>
 			</div>
 		</div>
 		<div class="wrapper" id="main">
@@ -106,9 +104,9 @@ $(".custom-link").click(function(){
 		url: '<?php echo url('menu/index');?>',
 		title: 'loading',
 		width: 681,
-		cancelValue: '取消',
+		cancelValue: '취소',
 		cancel:function(){},
-		okValue:'确认',
+		okValue:'확인',
 		ok:function(){
 			ajax_diymenu_del(this.returnValue);
 		}
