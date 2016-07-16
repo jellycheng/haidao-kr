@@ -83,7 +83,7 @@ class Http {
      * @param integer $expire    所用的时间限制
      * @return string
      */
-    public static function postRequest($url, $data = null, $proxy = null, $expire = 30) {
+    public static function postRequest($url, $data = null, $type = 'array',$proxy = null, $expire = 30) {
 
         //参数分析
         if (!$url) {
@@ -127,7 +127,11 @@ class Http {
         //发送一个常规的Post请求
         curl_setopt($ch, CURLOPT_POST, true);
         //Post提交的数据包
-        curl_setopt($ch,  CURLOPT_POSTFIELDS, http_build_query($data));
+        if($type == 'array'){
+            curl_setopt($ch,  CURLOPT_POSTFIELDS, http_build_query($data));
+        }else{
+            curl_setopt($ch,  CURLOPT_POSTFIELDS, $data);
+        }
 
         //使用自动跳转
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);

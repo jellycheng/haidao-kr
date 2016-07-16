@@ -329,13 +329,13 @@ class module_service extends service
 		$lists = $shop->get_branch_auth();
 		$branch = $end = array();
 		if($lists){
-			foreach ($lists AS $list) {
-				if(!(TIMESTAMP > $list['start_time'] && TIMESTAMP < $list['end_time'])){
+			foreach ($lists['lists'] AS $list) {
+				if((TIMESTAMP < $list['start_time'] || TIMESTAMP > $list['end_time']) && $list['end_time'] > 0){
 					$end[] = $list['branch_id'];
 				}
 			}
 		}
-		if($end){
+		if(!empty($end)){
 			$this->table->where(array('branch_id' => array('IN',$end)))->setField('isenabled',0);
 		}
 		$sqlmap = array();

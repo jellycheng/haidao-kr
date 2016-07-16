@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="hd_version"><![CDATA[2.4.1.160715]]></item>
+	<item id="hd_release"><![CDATA[20160715]]></item>
+	<item id="hd_branch"><![CDATA[develop]]></item>
+	<item id="hd_fixbug"><![CDATA[000000029]]></item>
+	<item id="hd_log">
+		<item id="0"><![CDATA[修复微信扫码支付跳转到空白页的问题]]></item>
+		<item id="1"><![CDATA[修复微信手机支付无法支付的问题]]></item>
+		<item id="2"><![CDATA[修复下载插件应用包时没有自动创建相关目录的问题]]></item>
+		<item id="3"><![CDATA[修复默认模版部分文案错误]]></item>
+		<item id="4"><![CDATA[修复其它已知问题]]></item>
+	</item>
+	<item id="hd_files">
+		<item id="update">
+			<item id="0"><![CDATA[README.md]]></item>
+			<item id="1"><![CDATA[config/version.php]]></item>
+			<item id="2"><![CDATA[system/core/Http.class.php]]></item>
+			<item id="3"><![CDATA[system/module/admin/model/service/plugin_service.class.php]]></item>
+			<item id="4"><![CDATA[system/module/pay/library/driver/pay/wechat_js/wechat_js.class.php]]></item>
+			<item id="5"><![CDATA[system/module/pay/library/driver/pay/wechat_qr/wechat_qr.class.php]]></item>
+			<item id="6"><![CDATA[template/default/goods/detail.html]]></item>
+			<item id="7"><![CDATA[template/default/goods/snapshot.html]]></item>
+		</item>
+	</item>
+</root>

@@ -1345,15 +1345,16 @@ function multi_array_sort($multi_array, $sort_key, $sort = SORT_DESC) {
 }
 
 /* 获取加密后的签名 */
-function get_sign($params, $key ,$sign_type='md5') {
-    ksort($params,SORT_STRING);
-    $arg  = "";
-    while (list ($k, $val) = each ($params)) {
-        if(empty($val) || $k == 'sign') continue;
-        $arg.=$k."=". $val ."&";
+function get_sign($params, $key, $sign_type = 'md5') {
+    ksort($params, SORT_STRING);
+    $arg = "";
+    while (list ($k, $val) = each($params)) {
+        if (empty($val) || $k == 'sign'|| in_array($k, array('m', 'c', 'a')))
+            continue;
+        $arg.=$k . "=" . urldecode(htmlspecialchars_decode($val)) . "&";
     }
-    $arg = substr($arg,0,count($arg)-2);
-    return $sign_type($arg.$key);
+    $arg = substr($arg, 0, count($arg) - 2);
+    return $sign_type($arg . $key);
 }
 
 /**

@@ -43,6 +43,8 @@ class plugin_service extends service {
      * @return [type]              [description]
      */
     public function install($params){
+		if(!is_dir(CACHE_PATH.'plugin')) mkdir(CACHE_PATH.'plugin');
+
     	$shop = new shop();
     	$shop->check_sign($params);
     	$data = $params['data'];
@@ -131,16 +133,15 @@ class plugin_service extends service {
      * @return [type]             [description]
      */
     public function uninstall($identifier = ''){
-    	$result = $this->_uninstall($identifier);
-    	if(!$result){
-			$this->error = '卸载失败';
-			return FALSE;
+		$data = $this->plugin_db->where(array('identifier' => $identifier))->field('branch_id,version')->find();
+		$result = $this->_uninstall($identifier);
+		if(!$result){
+		  	$this->error = '卸载失败';
+		  	return FALSE;
 		}
-		$branch_id = $this->plugin_db->where(array('identifier' => $identifier))->getField('branch_id');
-		if($branch_id){
-    		$version = $this->plugin_db->where(array('branch_id' => $branch_id))->getfield('version');
-			$shop = new shop();
-			$shop->_notify($branch_id,'uninstall',$version);
+		if($data['branch_id'] > 0){
+		  	$shop = new shop();
+		  	$shop->_notify($data['branch_id'],'uninstall',$data['version']);
 		}
     	return TRUE;
     }
@@ -220,6 +221,7 @@ class plugin_service extends service {
 	 * @return [type]             [description]
 	 */
 	public function _install($identifier = '',$branch_id = 0){
+
 		$plugin_folder = PLUGIN_PATH.$identifier;
 		$xmldata  = $this->get_xml_config($identifier);
 		if(!$xmldata) {
@@ -463,7 +465,7 @@ class plugin_service extends service {
 		$lists = $shop->get_branch_auth();
 		$branch = $end = array();
 		if($lists){
-			foreach ($lists AS $list) {
+			foreach ($lists['lists'] AS $list) {
 				if((TIMESTAMP < $list['start_time'] || TIMESTAMP > $list['end_time']) && $list['end_time'] > 0){
 					$end[] = (int)$list['branch_id'];
 				}

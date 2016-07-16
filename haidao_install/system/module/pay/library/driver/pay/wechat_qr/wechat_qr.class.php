@@ -38,7 +38,7 @@ class wechat_qr extends pay_abstract {
             $result['out_trade_no'] = $data['out_trade_no'];
             return $result;
         }
-        Http::postRequest($this->config['gateway_url'], $this->_array2xml($return));
+        Http::postRequest($this->config['gateway_url'], $this->_array2xml($return),'xml');
     }
     
     public function _notify(){
@@ -67,7 +67,7 @@ class wechat_qr extends pay_abstract {
         else echo 'success';
     }
     public function gateway_url() {
-	    $result = Http::postRequest($this->config['gateway_url'], $this->_array2xml($this->getpreparedata()));
+	    $result = Http::postRequest($this->config['gateway_url'], $this->_array2xml($this->getpreparedata()),'xml');
 	    $result = $this->_xml2array($result);
 	    if($result['return_code'] === 'SUCCESS' ) {
 		    return $result['code_url'];

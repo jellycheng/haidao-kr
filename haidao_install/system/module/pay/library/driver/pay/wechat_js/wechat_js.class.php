@@ -72,7 +72,7 @@ class wechat_js extends pay_abstract {
         $url_openid["code"] = $code;
         $url_openid["grant_type"] = "authorization_code";
         $get_openid_url = "https://api.weixin.qq.com/sns/oauth2/access_token?".$this->ToUrlParams($url_openid);
-        $openid_info = Http::postRequest($get_openid_url);
+        $openid_info = Http::postRequest($get_openid_url,'','xml');
         $openid_info = json_decode($openid_info,TRUE);
         return $openid_info['openid'];
     }
@@ -94,7 +94,7 @@ class wechat_js extends pay_abstract {
         $prepare_data['sign'] = $this->getSign($prepare_data,$this->config['key']);
         // 数字签名
         $prepare_xml = arrayToXml($prepare_data);
-        $this->result = Http::postRequest($this->url, $prepare_xml);
+        $this->result = Http::postRequest($this->url, $prepare_xml,'xml');
         $this->result = xmlToArray($this->result);
         $jsApiData=array();
         $jsApiData['appId']=$this->config['appid'];
