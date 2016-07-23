@@ -35,24 +35,54 @@ class cloud_service extends service {
      */
     public function getMemberLogin($account, $password) {
         //获取token
-        $result = $this->get_access_token($account,$password);
-        //获取用户信息
-        $userinfo = $this->get_user_info($result['result']['access_token']);
-        $cloud =  unserialize(authcode(config('__cloud__','cloud'),'DECODE'));
-        if(!$cloud){
-            //绑定站点
-            $site_info = $this->post_site_info($result['result']['access_token']);
-        }else{
-            $site_info = $this->get_site_info($result['result']['access_token'],$cloud['identifier']);
+        $token = $this->get_access_token($account,$password);
+        if($token['code'] != 200){
+            $this->error = $token['msg'];
+            return FALSE;
         }
-         //构建信息
+        //获取站点列表
+        $site_lists = $this->get_site_lists($token['result']['access_token']);
+        if($site_lists['code'] != 200){
+            $this->error = $site_lists['msg'];
+            return FALSE;
+        }
+        if(empty($site_lists['result']['lists'])){
+            $result = $this->bind_site($token['result']['access_token'],$token['result']['expires_in']);
+        }else{
+            $sites = $site_lists['result']['lists'];
+            foreach ($sites as $key => $site) {
+                $sites[$key]['key'] = cut_str($site['key'], 3, 0).'****'.cut_str($site['key'], 3, -3);
+                $sites[$key]['_install_time'] = date('Y-m-d h:i:s',$site['install_time']);
+                if($this->config['identifier'] == $site['identifier']){
+                    $sites[$key]['current'] = 1;
+                }
+            }
+            cache('_cloud',$token['result']);
+            $result['site'] = $sites;
+        }
+        return $result;
+    }
+    /**
+     * [bind_site 绑定站点]
+     * @param  [type] $access_token [description]
+     * @param  [type] $expires_in   [description]
+     * @return [type]               [description]
+     */
+    private function bind_site($access_token,$expires_in,$identifier = ''){
+        $userinfo = $this->get_user_info($access_token);
+        if(!$identifier){
+            $site_info = $this->post_site_info($access_token);
+        }else{
+            $site_info = $this->get_site_info($access_token,$identifier);
+        }
+
         if($site_info['code'] == 200 && !empty($site_info['result'])) {
             $_config = array(
                 'username'   => $userinfo['result']['username'],
                 'sms'        => $userinfo['result']['sms'],
                 'coin'       => $userinfo['result']['coin'],
-                'token'      => $result['result']['access_token'],
-                'expires_in' => $result['result']['expires_in'],
+                'token'      => $access_token,
+                'expires_in' => $expires_in,
                 'identifier' => $site_info['result']['identifier'],
                 'key'        => $site_info['result']['key'],
                 'domain'     => $site_info['result']['domain'] ? $site_info['result']['domain'] : 'http://'.$_SERVER['HTTP_HOST'],
@@ -63,10 +93,13 @@ class cloud_service extends service {
             $config = new Config();
             $r = $config->file('cloud')->note('云平台文件')->space(8)->to_require_one($config_text,null,1);
             if($r) {
+                runhook('update_cache');
                 return true;
             }
+        }else{
+            $this->error = '绑定失败';
+            return FALSE;
         }
-        return false;
     }
     /**
      * [get_access_token 获取token]
@@ -86,6 +119,24 @@ class cloud_service extends service {
         $data['password'] = $password;
         $result = $this->_cloud->type('get')->data($data)->api('member/account.access_token');
         return $result;
+    }
+    /**
+     * [get_site_lists 获取站点列表]
+     * @param  [type]  $token    [description]
+     * @param  integer $pagesize [description]
+     * @return [type]            [description]
+     */
+    public function get_site_lists($access_token,$page = 1,$pagesize = 200){
+        if(!$access_token){
+            $this->error = 'token不能为空,';
+            return false;
+        }
+        $data = array();
+        $data['access_token'] = $access_token;
+        $data['page'] = $page;
+        $data['pagesize'] = $pagesize;
+        $info = $this->_cloud->type('get')->data($data)->api('site/get_site_list');
+        return $info;
     }
     /**
      * [get_user_info 获取用户信息]
@@ -243,6 +294,18 @@ class cloud_service extends service {
         }
         cache('product_notify',null);
         return false;
-
+    }
+    /**
+     * [bind_site 绑定站点]
+     * @param  [type] $identifier [description]
+     * @return [type]             [description]
+     */
+    public function site_bind($identifier = ''){
+        $token = cache('_cloud');
+        $access_token = $token['access_token'];
+        $expires_in = $token['expires_in'];
+        $result = $this->bind_site($access_token,$expires_in,$identifier);
+        cache('_cloud',null);
+        return true;
     }
 }

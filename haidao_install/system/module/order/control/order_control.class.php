@@ -167,9 +167,10 @@ class order_control extends init_control {
 			showmessage(lang('order/order_not_pay_status'));
 		}
 		if($order['real_amount'] == 0) {
-			redirect(url('order/order/pay_success',array('sn'=>$sn)));
+			redirect(url('order/order/pay_success',array('sn'=>$order_sn)));
 		}
-		if (checksubmit('dosubmit')) {
+		if (checksubmit('submit')) {
+			
 			$result = $this->service->detail_payment($_GET['order_sn'],$_GET['balance_checked'],$_GET['pay_code'],$_GET['pay_bank']);
 			if ($result == FALSE) showmessage($this->service->error);
 			$gateway = $result['gateway'];

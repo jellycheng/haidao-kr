@@ -110,6 +110,7 @@ class index_control extends init_control
      */
     public function snapshot()
     {
+        helper('order/function');
         $info = model('order/order_sku', 'service')->detail($_GET['order_sku_id']);
         $sales = model('goods/goods_index')->where(array('sku_id' => $_GET['sku_id']))->getField('sales');
         $goods = json_decode($info['sku_info'], true);

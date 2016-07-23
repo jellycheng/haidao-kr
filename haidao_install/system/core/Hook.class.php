@@ -4,63 +4,69 @@ class Hook {
     static private  $hooks       =   array();
 
     /**
-     * 执行钩子
-     * @param string $tag 标签名称
-     * @param mixed $params 传入参数
-     * @return void
+     * [add 注册hook]
+     * @param [type]  $hook     [description]
+     * @param [type]  $class [description]
+     * @param boolean $first    [description]
      */
-    static public function execute($hook, $params, $flag = FALSE) {
-        $modules = cache('module', '', 'common');
-        $modules = array_keys($modules);
-        $hook_cache = cache('hooks','','common');
-        $hooks = $hook_cache ? array_keys($hook_cache) : array();
-        $hookfile = !empty($hooks) ? array_merge($modules,$hooks) : $modules;
-        foreach ($hookfile AS $hookname) {
-            if(in_array($hookname,$modules)){
-                $file = APP_PATH.config('DEFAULT_H_LAYER').'/'.$hookname.'/'.'hook.class.php';
-            }else{
-                $file = APP_PATH.'plugin/'.$hookname.'/'.'hook.class.php';
-            }
-            require_cache($file);
+    static public function add($hook, $class){
+        if(!isset(self::$hooks[$hook])){
+            self::$hooks[$hook] = array();
         }
-        foreach (self::get_hook_class() AS $plugin) {
-            if($plugin->hasMethod($hook)){
-                $reflectionMethod= $plugin->getMethod($hook);
-                $classname = $plugin->getName();
-                $substr = strpos($classname,'plugin_');
-                if($substr === 0){
-                    $subclass = str_replace('plugin_','',$classname);
-                    $pluginInstance = $plugin->newInstance($subclass);
-                }else{
-                    $pluginInstance = $plugin->newInstance();
-                }
-                $return = $reflectionMethod->invoke($pluginInstance,$params); 
-                if(is_array($return)){
-                    $result[] = $return;
-                } else{
-                    $result .= (string)$return;
-                }
-            }
-        }
-        if($result !== FALSE){
-            return $result;
+        if(is_array($class)){
+            self::$hooks[$hook] = array_merge(self::$hooks[$hook], $class);
+        }else {
+            self::$hooks[$hook][] = $class;
         }
     }
     /**
-     * [get_hook_class 获取插件和模块hook的反射]
-     * @return [type] [description]
+     * 执行钩子
+     * @param string $hook 钩子名称
+     * @param mixed $params 传入参数
+     * @return void
      */
-    static private function get_hook_class(){
-        $plugins = array();
-        foreach(get_declared_classes() as $class) {  
-           $reflectionClass= new ReflectionClass($class); 
-            if($reflectionClass->isSubclassOf('plugin')) {
-               $plugins[]= $reflectionClass;  
-            }  
-            if($reflectionClass->isSubclassOf('Hook')) {  
-               $plugins[]= $reflectionClass;  
-            }  
-        }  
-        return $plugins;
+    static public function execute($hook,$flag = false,&$params = null) {
+        if(!$hook) return FALSE;
+        if(isset(self::$hooks[$hook])) {
+            foreach (self::$hooks[$hook] as $class) {
+                list($type,$name) = explode('/',$class);
+                if($type == 'module'){
+                    require_cache(APP_PATH.config('DEFAULT_H_LAYER').'/'.$name.'/'.'hook.class.php');
+                    $classname = $name.'_hook';
+                }elseif ($type == 'plugin') {
+                    require_cache(APP_PATH.'plugin/'.$name.'/'.'hook.class.php');
+                    $classname = 'plugin_'.$name;
+                }else{
+                    return FALSE;
+                }
+                $result = self::class_exec($classname,$hook,$params);
+                
+                if($flag){
+                    if(is_array($result)){
+                        $return[] = $result;
+                    }elseif(is_string($result)){
+                        $return .= $result;
+                    }
+                }
+            }
+            if($flag){
+                return $return;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+    /**
+     * [class_exec 执行类]
+     * @param  [type] $class   [description]
+     * @param  string $hook    [description]
+     * @param  [type] &$params [description]
+     * @return [type]          [description]
+     */
+    public static function class_exec($class, $hook = '', &$params = null){
+        $obj = new $class();
+        if(is_callable(array($obj, $hook))){
+            return  $obj->$hook($params);
+        }
     }
 }

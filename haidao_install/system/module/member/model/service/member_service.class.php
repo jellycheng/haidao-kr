@@ -118,9 +118,9 @@ class member_service extends service {
 			return false;
 		}
 		$this->dologin($result, $data['password']);
-        runhook('after_register',$result);
         $this->login_inc($result);
-		return $result;
+        runhook('after_register','',$result);
+		return true;
     }
 
     public function login($account, $password) {
@@ -153,8 +153,8 @@ class member_service extends service {
 			return false;
 		}
 		$this->dologin($member['id'], $password);
-        runhook('after_login', $member);
         $this->login_inc($member['id']);
+        runhook('after_login','',$member);
 		return true;
     }
 
@@ -320,7 +320,7 @@ class member_service extends service {
             $member['member'] = $_member;
             $member['change_money'] = $num;
             $member['user_money'] = $_member['money'] > 0 ? $_member['money'] : 0;
-            runhook('money_change',$member);
+            runhook('money_change','',$member);
         }
         return TRUE;
     }
@@ -464,9 +464,9 @@ class member_service extends service {
             return false;
         }else{
             if($action == 'register_validate'){
-                runhook('register_validate',$data);
+                runhook('register_validate','',$data);
             }else{
-                runhook('mobile_validate',$data);
+                runhook('mobile_validate','',$data);
             }
             return true;
         }
@@ -487,7 +487,7 @@ class member_service extends service {
 		$data['vcode'] = $vcode;
 		$data['email'] = $params['email'];
         $data['mid'] = $mid;
-		runhook('email_validate',$data);
+		runhook('email_validate','',$data);
 		$this->vcode_table->where(array('mid' => $mid,'action' => 'resetemail','dateline'=>array('LT',TIMESTAMP)))->delete();
 		$this->vcode_table->add(array('mid' => $mid,'vcode'=>$vcode,'action'=>'resetemail','dateline'=>time()));
 		return true;
@@ -584,7 +584,7 @@ class member_service extends service {
             $data['mobile_validate'] = $code;
             $data['mobile'] = $member['mobile'];
         }
-        runhook('forget_pwd',$data);
+        runhook('forget_pwd','',$data);
         return true;
     }
 

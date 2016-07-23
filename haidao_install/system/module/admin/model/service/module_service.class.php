@@ -128,11 +128,8 @@ class module_service extends service
 				}
 			}
 			if($nodes) $result = $this->load->table('node')->addAll($nodes);
-			if(!$result){
-				$this->error = '操作失败';
-				return false;
-			}
 			@unlink($module_folder.'/'.$xmldata['Data']['installfile']);
+			@unlink($module_folder.'/config.xml');
 			/* 更新缓存 */
 			$this->build_cache();
 			return true;
@@ -181,7 +178,7 @@ class module_service extends service
 				$result = $this->_upgrade($identifier,$branch_id);
 			}
 			$version = $this->plugin_db->where(array('branch_id' => $branch_id))->getfield('version');
-			$shop->_notify($branch_id,'upgrade',$version);
+			$shop->_notify($branch_id,'update',$version);
 		}
 	}
 	/**
@@ -237,11 +234,8 @@ class module_service extends service
 				}
 			}
 			if($nodes) $result = $this->load->table('node')->addAll($nodes);
-			if(!$result){
-				$this->error = '操作失败';
-				return false;
-			}
 			@unlink($module_folder.'/'.$xmldata['Data']['upgradefile']);
+			@unlink($module_folder.'/upgrade.xml');
 			/* 更新缓存 */
 			$this->build_cache();
 			return true;
@@ -326,18 +320,18 @@ class module_service extends service
 	 */
 	public function build_cache() {
 		$shop = new shop();
-		$lists = $shop->get_branch_auth();
+		$lists = $shop->get_branch_auth('module');
 		$branch = $end = array();
-		if($lists){
+		if($lists['lists']){
 			foreach ($lists['lists'] AS $list) {
-				if((TIMESTAMP < $list['start_time'] || TIMESTAMP > $list['end_time']) && $list['end_time'] > 0){
+				if((TIMESTAMP > $list['start_time'] && TIMESTAMP < $list['end_time']) || $list['end_time'] == 0){
 					$end[] = $list['branch_id'];
 				}
 			}
 		}
-		if(!empty($end)){
-			$this->table->where(array('branch_id' => array('IN',$end)))->setField('isenabled',0);
-		}
+		$end[] = 0;
+		$this->table->where(array('branch_id' => array('NOT IN',$end)))->setField('isenabled',0);
+		
 		$sqlmap = array();
 		$sqlmap['isenabled'] = 1;
 		$modules = $this->table->where($sqlmap)->getField('identifier, name', true);
@@ -356,7 +350,9 @@ class module_service extends service
 		    	foreach ($result['_history'] AS $_history) {
 		    		$versions[] = $_history['version'];
 		    	}
-				$info['result'][$key]['new_version'] = max($versions);
+		    	if($result['now_version'] < max($versions)){
+					$info['result'][$key]['new_version'] = max($versions);
+				}
 	    	}
 
 	    	cache('module_lists',$info['result'],'common');

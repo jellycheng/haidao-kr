@@ -58,6 +58,7 @@ class money_control extends cp_control
 				redirect($gateway['gateway_url']);
 			}
 			$gateway['order_sn'] = $data['order_sn'];
+            $gateway['trade_no'] = $data['order_sn'];
 			$gateway['total_fee'] = $money;
 			/* 支付成功后的跳转 */
 			if(config('TPL_THEME') == 'wap'){

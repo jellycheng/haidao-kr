@@ -55,20 +55,6 @@
 				}
 			}
 		</script>
-		<script type="text/javascript">
-			try{
-				var _maq = _maq || [];
-				_maq.push(['_setAccount', '<?php echo $_POST['site_name']?>']);
-				_maq.push(['_setAction', 'install']);
-				_maq.push(['_setVersion', '<?php echo HD_VERSION?>']);
-				(function() {
-					var ma = document.createElement('script'); ma.type = 'text/javascript'; ma.async = true;
-					ma.src = ('https:' == document.location.protocol ? "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x63\x6c\x6f\x75\x64\x2e\x68\x61\x69\x64\x61\x6f\x2e\x6c\x61": "\x68\x74\x74\x70\x3a\x2f\x2f\x63\x6c\x6f\x75\x64\x2e\x68\x61\x69\x64\x61\x6f\x2e\x6c\x61") + '/ma.js';
-					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ma, s);
-				})();
-			}catch(e){}
-		</script>
-
 		<?php
 		install_sql();
 		?>

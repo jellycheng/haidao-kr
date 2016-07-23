@@ -10,6 +10,7 @@
 	<dt class="text-sub text-default">信息中心</dt>
 	<dd {if (CONTROL_NAME=='favorite')}class="current"{/if}><a href="{url('member/favorite/index')}">我的收藏</a></dd>
 	<dd {if (CONTROL_NAME=='consult')}class="current"{/if}><a href="{url('member/consult/index')}">我的咨询</a></dd>
+	{hook/member_coupon_lists}
 	<dd {if (CONTROL_NAME=='service')}class="current"{/if}><a href="{url('member/service/index')}">售后服务</a></dd>
 	{hook/member_extra_lists data}
 </dl>

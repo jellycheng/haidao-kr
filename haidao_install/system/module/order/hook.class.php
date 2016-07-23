@@ -1,35 +1,44 @@
 <?php
-class order_hook extends Hook
+class order_hook
 {
-	public function create_order($member) {
+	public function create_order(&$member) {
 		// echo '下单成功钩子';
 		model('notify/notify','service')->execute('create_order', $member);
 	}
 
-	public function pay_success($ret) {
+	public function pay_success(&$ret) {
 		helper('order/function');
 		// echo '钩子：支付成功';
 		if($ret['result'] == 'success') {
 			if($ret['out_trade_no'][0] != 'm') {
-				model('order/order_sub','service')->set_order($ret['out_trade_no'], 'pay', 0, array(
-					'pay_method' => $ret['pay_code'],
-					'pay_sn' => $ret['trade_no'],
-				));
-				$sub_order_info = model('order/order_sub')->where(array('order_sn' => $ret['out_trade_no']))->find();
-				$member = array();
-				$member['member'] = model('member/member')->where(array('id'=>$sub_order_info['buyer_id']))->find();
-				$member['real_amount'] = $sub_order_info['real_price'];
-				model('notify/notify','service')->execute('pay_success', $member);
-				if($ret['pay_code'] == 'wechat_qr' || $ret['pay_code'] == 'wechat_js'){
-					return 'success';
-				}else{
-					showmessage(lang('pay/order_pay_success'),'../../index.php?m=order&c=order&a=pay_success&order_sn='.$ret['out_trade_no']);
+				$sqlmap = array();
+				$sqlmap['trade_no'] = $ret['out_trade_no'];
+				$sqlmap['status'] = 0;
+				$sqlmap['method'] = $ret['pay_code'];
+				$pay_info = model('order/order_trade')->where($sqlmap)->find();
+				$order_sn = model('order_trade')->where(array('trade_no'=>$ret['out_trade_no']))->getField('order_sn');
+				if($pay_info){
+			        model('order_trade')->where(array('trade_no'=>$ret['out_trade_no']))->setField('status',1);
+			        model('order/order_sub', 'service')->set_order($order_sn, 'pay', 0, array(
+			          'pay_method' => $ret['pay_code'],
+			          'pay_sn' => $ret['trade_no'],
+			        ));
+			        $sub_order_info = model('order/order_sub')->where(array('order_sn' => $order_sn))->find();
+			        $member = array();
+			        $member['member'] = model('member/member')->where(array('id'=>$sub_order_info['buyer_id']))->find();
+			        $member['real_amount'] = $sub_order_info['real_price'];
+			        model('notify/notify','service')->execute('pay_success', $member);
 				}
-			}
+		        if($ret['pay_code'] == 'wechat_qr' || $ret['pay_code'] == 'wechat_js'){
+		            return 'success';
+		        }else{
+		            showmessage(lang('pay/order_pay_success'),'../../index.php?m=order&c=order&a=pay_success&order_sn='.$order_sn);
+		        }
+		     }
 		}
 	}
 
-	public function confirm_order($order) {
+	public function confirm_order(&$order) {
 		// echo '钩子：卖家确认订单';
 		$member = array();
 		$member['member'] = model('member/member')->where(array('id' => $order['buyer_id']))->find();
@@ -37,7 +46,7 @@ class order_hook extends Hook
 		model('notify/notify','service')->execute('confirm_order', $member);
 	}
 
-	public function skus_delivery($order) {
+	public function skus_delivery(&$order) {
 		// echo '钩子：订单商品已发货';
 		$member = array();
 		$member['member'] = model('member/member')->where(array('id' => $order['buyer_id']))->find();
@@ -51,7 +60,7 @@ class order_hook extends Hook
 	}
 
 	// 钩子：整个订单完成
-	public function order_finish($order_sn) {
+	public function order_finish(&$order_sn) {
 		$order = model('order/order')->where(array('sn' => $order_sn))->find();
 		/* 增加会员经验值 */
 		// 获取后台经验获取比例配置

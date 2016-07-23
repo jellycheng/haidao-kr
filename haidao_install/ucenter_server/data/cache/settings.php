@@ -6,7 +6,7 @@ $_CACHE['settings'] = array (
   'dateformat' => 'y-n-j',
   'doublee' => '0',
   'nextnotetime' => '0',
-  'timeoffset' => '28800',
+  'timeoffset' => '32400',
   'privatepmthreadlimit' => '25',
   'chatpmthreadlimit' => '30',
   'chatpmmemberlimit' => '35',
@@ -26,6 +26,7 @@ $_CACHE['settings'] = array (
   'mailusername' => '1',
   'mailsilent' => '1',
   'version' => '1.6.0',
+  'timeformat' => 'h:i A',
 );
 
 ?>

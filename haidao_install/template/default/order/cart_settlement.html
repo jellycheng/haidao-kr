@@ -5,6 +5,15 @@
 	var skuids = '<?php echo $_GET["skuids"] ?>';
 	var delivery_url = '?m=order&c=order&a=get_deliverys&skuids='+ skuids;
 </script>
+<script type="text/javascript">
+	/*
+	 * 数据拓展可以以新增一个订单提交点击事件，在点击提交时生成数据，
+	 * 如$("#submit").live('click',function(){order_params.param = "值"});
+	 * 点击事件得放在原有的点击提交事件前，否则会因先执行了原本的提交而无法获取值传参
+	 * 也可以在数据生成时存储到order_params对象中，如order_params.param = "值"
+	 */
+	var order_params = {};
+</script>
 <!-- 头部 -->
 <div class="header container">
 	<div class="logo fl">
@@ -119,6 +128,7 @@
 									</select>
 								</dd>
 							</dl>
+							{hook/settlement_middle_left}
 						</div>
 					</div>
 					<div class="settlement-cart-wrap cart-wrap text-default bg-blue-gray clearfix">
@@ -218,6 +228,7 @@
 			<p>总运费：<span class="text-right" data-model="deliverys_total">{$carts[deliverys_total]}</span></p>
 			<p>发票税额：<span class="text-right" data-model="invoice_tax">{$carts[invoice_tax]}</span></p>
 			<p>活动优惠：<span class="text-right text-mix" data-model="promot_total">{$carts[promot_total]}</span></p>
+			{hook/settlement_down_right}
 		</div>
 		{hook/settlement_info data}
 		<div class="settlement-lists layout clearfix">
@@ -232,9 +243,8 @@
 <?php include template('toolbar','common');?>
 <?php include template('footer','common'); ?>
 <script>
-
 $(function(){
-	hd_order._get();
+	hd_order._get(hd_order._params());
 	$('[data-iframe]').live('click',function(){
 			top.dialog({
 				url : $(this).attr('href'),
@@ -288,11 +298,11 @@ $(function(){
 
 	/* 得到订单数据 */
 	$("[data-event='balance']").live("click", function(){
-		hd_order._get();
+		hd_order._get(hd_order._params());
 	});
 
 	$("[data-model='order_proms']").live("change", function(){
-		hd_order._get();
+		hd_order._get(hd_order._params());
 	});
 
 	/* 商品促销 */
@@ -312,6 +322,26 @@ $(function(){
 	$("#invoice .receipt-choose .item").live("click",function() {
 		hd_order._invoice($(this));
 	})
+
+	/* 点击提交按钮 */
+	$("#submit").live('click',function(){
+		if($("#submit").hasClass('gray-btn')) return false;
+		$("#submit").addClass('gray-btn').text('创建订单中...');
+		var $params = hd_order._params();
+		$.each($params, function(k, v) {
+			order_params[k] = v;
+		});
+		$.post('?m=order&c=order&a=create', order_params, function(ret) {
+			if(ret.status == 1) {
+				$("#submit").text('订单创建成功');
+				setTimeout(window.location.href = ret.referer,500);
+			} else {
+				$.dialogTip({content: ret.message});
+				$("#submit").removeClass('gray-btn').text('重新提交');
+				return false;
+			}
+		}, 'json');
+	});
 
 })
 </script>

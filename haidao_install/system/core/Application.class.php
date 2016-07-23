@@ -41,7 +41,6 @@ class Application extends Base {
 		if(!defined('CORE_FUNCTION') && !@include(APP_PATH.'function/function.php')) {
 			exit('function.php is missing');
 		}
-
 		if(function_exists('ini_get')) {
 			$memorylimit = @ini_get('memory_limit');
 			if($memorylimit && return_bytes($memorylimit) < 33554432 && function_exists('ini_set')) {
@@ -55,6 +54,8 @@ class Application extends Base {
 		if (isset($_GET['GLOBALS']) ||isset($_POST['GLOBALS']) ||  isset($_COOKIE['GLOBALS']) || isset($_FILES['GLOBALS'])) {
 			error::system_error('_request_tainting_');
 		}
+		//加载钩子
+		$this->_hook_register();
 		$this->_xss_check();
 		$_GET = Input::get();
 		$_POST = Input::post();
@@ -201,5 +202,22 @@ class Application extends Base {
         $method   = !empty($_POST[$var]) ? $_POST[$var] : (!empty($_GET[$var])?$_GET[$var]: config('DEFAULT_METHOD'));
         unset($_POST[$var],$_GET[$var]);
         return strip_tags($method);
+    }
+
+    private function _hook_register(){
+    	$module_hooks = array_keys(cache('module'));
+		$plugin_hooks = array_keys(cache('hooks'));
+		$hooks = (!empty($module_hooks) && !empty($plugin_hooks)) ? array_merge($module_hooks,$plugin_hooks) : $module_hooks;
+		foreach ($hooks AS $hookname) {
+			if($hookname == 'ucenter' || $hookname == 'testdata'){
+				@unlink(APP_PATH.'plugin/'.$hookname.'/include/hook.inc.php');
+			}
+            if(in_array($hookname,$module_hooks)){
+                $file = APP_PATH.config('DEFAULT_H_LAYER').'/'.$hookname.'/include/hook.inc.php';
+            }else{
+                $file = APP_PATH.'plugin/'.$hookname.'/include/hook.inc.php';
+            }
+            require_cache($file);
+        }
     }
 }

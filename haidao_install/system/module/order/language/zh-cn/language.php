@@ -50,6 +50,10 @@ return array(
 	'order_address_district_error'    => '收货人地区ID只能为正整数',
 	
 	'order_address_address_not_null'  => '收货人详细地址不能为空',
+
+    'order_pay_sn_not_null'            => '订单支付号不能为空',
+    'order_pay_sn_already_exist'      => '订单支付号已经存在',
+    'order_pay_money_error'            => '订单支付总额只能为实数(保留两位小数)',
 	
 	// ---------- 购物车
 	'cart_add_success'    => '购物车添加成功',

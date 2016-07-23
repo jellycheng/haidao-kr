@@ -1063,11 +1063,15 @@ function page_url($param = array(), $url) {
     return $_url.'?'.http_build_query($params);
 }
 
-function runhook($hookid, $params) {
-    $result = Hook::execute($hookid, $params);
-    if($result !== FALSE){
+function runhook($hookid,$flag = false, &$params = null) {
+    $result = Hook::execute($hookid,$flag,$params);
+    if(!empty($result)){
         return $result;
     }
+}
+
+function addhook($hookid,$class){
+    Hook::add($hookid, $class);
 }
 
 /**

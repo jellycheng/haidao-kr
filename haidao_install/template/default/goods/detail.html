@@ -98,6 +98,7 @@
 				</div>
 			</div>
 			{/if}
+			{hook/goods_detail_coupon}
 		</div>
 		<div id="choose" class="choose-wrap layout clearfix"><!--error为提示未选择规格属性-->
 			<?php foreach($goods['specs'] AS $specs):?>
@@ -606,7 +607,6 @@
 <script type="text/javascript" src="{__ROOT__}statics/js/jquery.qrcode.min.js?v={HD_VERSION}"></script>
 <script type="text/javascript" src="{__ROOT__}statics/js/goods/jquery.md5.js?v={HD_VERSION}"></script>
 <script type="text/javascript" src="<?php echo __ROOT__ ?>statics/js/jquery.lazyload.js?v={HD_VERSION}" ></script>
-<script type="text/javascript" src="<?php echo __ROOT__ ?>template/default/statics/js/share.js" ></script>
 
 <script>
 

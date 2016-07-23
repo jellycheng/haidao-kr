@@ -571,32 +571,6 @@ var Panel = {
 			});
 		}
 		return '<table class="cube-table"><tbody>'+$table+'</tbody></table>';
-	},
-	coupon: function(vals){
-		var $list = '<li><a href="javascript:;"><div class="custom-coupon-price"><span>￥</span>20</div><div class="custom-coupon-desc">满200元可用</div></a></li><li><a href="javascript:;"><div class="custom-coupon-price"><span>￥</span>20</div><div class="custom-coupon-desc">满200元可用</div></a></li><li><a href="javascript:;"><div class="custom-coupon-price"><span>￥</span>20</div><div class="custom-coupon-desc">满200元可用</div></a></li>';
-		if(vals){
-			var $d = Base.decode(vals);
-			var $array = '';
-			$.each($d, function(k, v){
-				$array = v;
-			})
-			if($array){
-				$array = $array.split(",");
-				$list = '';
-				for (var i = 0; i < 3; i++) {
-					$.each(hd_coupon, function() {
-						if(this.id == $array[i]){
-							if(this.type_coupon == "amount_discount"){
-								$list += '<li><a href="javascript:;"><div class="custom-coupon-price"><span>￥</span>'+ this.num +'</div><div class="custom-coupon-desc">满'+ this.condition +'元可用</div></a></li>';
-							}else if(this.type_coupon == "straight_reduce"){
-								$list += '<li><a href="javascript:;"><div class="custom-coupon-price"><span>￥</span>'+ this.num +'</div><div class="custom-coupon-desc">无门槛使用</div></a></li>';
-							}
-						}
-					});
-				}
-			}
-		}
-		return '<ul class="custom-coupon clearfix">'+ $list +'</ul>';
 	}
 }
 
@@ -797,46 +771,6 @@ var Opts = {
 		}
 		this.createOpt('<div class="control-group"><span class="control-label">布局：</span><div class="controls"><table class="tablecloth" data-length="'+$index+'"><tbody>'+$table+'</tbody></table><input type="hidden" name="layout" data-validate="cube" value=\''+($cube?JSON.stringify($cube):'')+'\' /><p class="help-desc">点击 + 号添加内容</p></div></div>'+$choice);
 		Base.upLoad();
-	},
-	coupon: function(data,config){
-		var name = config.libs.form.name;
-		var label = config.libs.form.label;
-		var DS = config.libs.data;
-		var L = '',
-			H = '',
-			A = [];
-		if(data){
-			data = Base.decode(data);	//base64解密
-			data = data[name]; 			//取值
-			data = data.split(",");		//将值转化为数组
-			for (var i = 0; i < 3; i++) {
-				$.each(DS, function() {
-					if(this.id == data[i]){
-						A.push(this.id);
-						L += '<li data-id="'+ this.id +'">'
-			                +'    <div class="coupon-list-content">'
-			                +'        <div class="coupon-list-summary">'
-			                +'            <span class="label label-success">'+ (this.type_coupon == 'amount_discount'?'满额立减':'价格立减') +'</span>'
-			                +'            <span class="text-black">'+ this.name +'</span>'
-			                +'            <span class="text-gray">'+ (this.type_coupon == 'amount_discount'?'满'+ this.num +'元可用':'无限制') +'</span>'
-			                +'        </div>'
-			                +'    </div>'
-			                +'    <div class="coupon-list-opts">'
-			                +'        <a href="javascript:;" class="hd-remove-coupon">删除</a>'
-			                +'    </div>'
-			                +'</li>';
-			       	}
-				});
-			}
-			if(data.length < 3){
-				H = '<a href="javascript:;" class="hd-add-coupon h5">添加优惠券</a>';
-			}
-		}else{
-			H = '<a href="javascript:;" class="hd-add-coupon h5">添加优惠券</a>';
-		}
-		H = '<ul class="coupon-list">'+ L +'</ul>'+ H +'<span class="margin-left text-gray">（每个优惠券板块只展示三种）</span><input type="hidden" name="'+ name +'" value="'+ A +'" data-validate="required" />';
-		H = Base.getGroup(label, H);
-		this.createOpt(H);
 	}
 }
 
@@ -1191,15 +1125,5 @@ $(function(){
 		$(this).parents("li").remove();
 		diy.reload();
 	})
-	
-	//删除优惠券
-	$(document).on('click', '.hd-remove-coupon', function(){
-		var $id = $(this).parents("li").data("id");
-		var $input = $(".sidebar-content").find("input");
-		var $array = $input.val().split(",");
-		$array.splice($.inArray(parseInt($id),$array),1);
-		$input.val($array);
-		diy.reload();
-	})
-	
+
 })

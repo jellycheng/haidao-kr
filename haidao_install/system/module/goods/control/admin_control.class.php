@@ -162,7 +162,7 @@ class admin_control extends init_control {
 		}
 		if(checksubmit('dosubmit')) {
 			$result = $this->spu_service->goods_add($_GET);
-			runhook('make_watermark',$_GET);
+			runhook('make_watermark','',$_GET);
 			if($result === false){
 				showmessage($this->spu_service->error);
 			}else{

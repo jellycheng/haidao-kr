@@ -249,7 +249,7 @@ class order_sub_service extends service {
 		/* 物流跟踪 */
 		$this->service_track->add($order['order_sn'] ,$order['sub_sn'] , '您的订单已确认，正在配货');
 		// 钩子：确认订单
-		runhook('confirm_order',$order);
+		runhook('confirm_order','',$order);
 		return '确认订单';
 	}
 
@@ -375,7 +375,7 @@ class order_sub_service extends service {
 		$this->service_track->add($order['order_sn'] ,$order['sub_sn'] , '您的订单配货完毕，已经发货。'.$string,0,$addid);
 		// 钩子：订单商品已发货
 		$order['delivery_sn'] = $delivery_sn;
-		runhook('skus_delivery',$order);
+		runhook('skus_delivery','',$order);
 		return '订单发货';
 	}
 
@@ -473,7 +473,8 @@ class order_sub_service extends service {
 		if ($sub_count == $already_count) {	// 所有子订单已确认收货
 			$data['finish_status'] = 2;
 			// 钩子：整个订单完成
-			runhook('order_finish',$order['order_sn']);
+			$order_finish_sn = $order['order_sn'];
+			runhook('order_finish','',$order_finish_sn);
 		} else {	// 部分子订单已确认收货
 			$data['finish_status'] = 1;
 		}

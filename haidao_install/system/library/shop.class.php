@@ -64,8 +64,11 @@ class shop {
      * [get_branch_auth 获取列表]
      * @return [type] [description]
      */
-    public function get_branch_auth(){
+    public function get_branch_auth($type,$limit = 1000){
         $this->data['method'] = 'shop.application.auths';
+        $this->data['type'] = $type;
+        $this->data['limit'] = $limit;
+        $this->data['status'] = 1;
         $lists = json_decode(Http::getRequest($this->api,$this->data),TRUE);
         return $lists['result'];
     }

@@ -1,5 +1,13 @@
 {template header common}
-
+	<script type="text/javascript">
+		/*
+		 * 数据拓展可以以新增一个订单提交点击事件，在点击提交时生成数据，
+		 * 如$("#submit").on('tap',function(){hd_params.param = "值"});
+		 * 点击事件得放在原有的点击提交事件前，否则会因先执行了原本的提交而无法获取值传参
+		 * 也可以在数据生成时存储到order_params对象中，hd_params.param = "值"
+		 */
+		var hd_params = {};
+	</script>
 	<div class="mui-content has-footer-bar">
 	    <ul class="mui-table-view layout-list-common margin-none">
 	    	<li class="mui-table-view-cell">
@@ -30,6 +38,7 @@
 				</li>
 			{/if}
 		</ul>
+		{hook/wap_settlement_coupon}
 		{loop $carts['skus'] $sellerid $cart}
 			<ul data-sellerid="{$sellerid}" class="custom-goods-items custom-goods-row row1 custom-list-goods list-col-10 mui-clearfix">
 				<li class="padding border-bottom">
@@ -115,9 +124,28 @@
 			orderList: <?php echo json_encode($cart[_promos]); ?>,		//订单促销列表
 			referer: '{url("order/order/settlement" ,array("skuids" => $_GET["skuids"]))}',	
 		};
-
 		hd_order.start(hd_key, hd_datas, hd_skuids);
-		
+		//重新计算价格
+		function recount(){
+			var $params = hd_order.params();
+
+			$.each($params, function(k, v) {
+				hd_params[k] = v;
+			});
+			$.getJSON('?m=order&c=order&a=get', hd_params, function(ret) {
+				if(ret.status == 0) {
+					$.tips({icon: 'error',content: ret.message});
+				} else {
+					$("[data-show='real_amount']").text(ret.result.real_amount);
+					$("[data-show='sku_numbers']").text(ret.result.sku_numbers);
+					$.each(ret.result.skus ,function(sellerid, v) {
+						$("[data-sellerid="+ sellerid +"]").find("[data-show='delivery_price']").text(v.delivery_price);
+					});
+				}
+			})
+		}
+		recount(); //重新计算价格
+
 		// 商家留言 
 		function getRemarks(){
 			var _datas = JSON.parse(window.localStorage.getItem('hddatas'));
@@ -133,11 +161,28 @@
 		$("[data-id='remarks']").on("change" ,function() {
 			getRemarks();
 		})
-		
+
 		//提交
 		mui(document).on("tap", "#settlement-submit", function(){
 			getRemarks();
-			hd_order.doSubmit();
+			$("[data-id='submit']").text('提交中...');
+			var $params = hd_order.params();
+			$.each($params, function(k, v) {
+				hd_params[k] = v;
+			});
+			$.post('?m=order&c=order&a=create', hd_params, function(ret) {
+				if(ret.status == 1) {
+					$("[data-id='submit']").text('提交成功');
+					setTimeout(window.location.href = ret.referer,500);
+					window.localStorage.removeItem("hdkey");
+					window.localStorage.removeItem("hddatas");
+					return false;
+				} else {
+					$.tips({icon: 'error',content: ret.message});
+					$("[data-id='submit']").text('重新提交');
+					return false;
+				}
+			}, 'json');
 		});
 		
 	}

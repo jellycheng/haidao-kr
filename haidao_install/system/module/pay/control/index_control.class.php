@@ -13,7 +13,7 @@ class index_control extends control {
 		$method = _PAYMENT_;
 		$ret = $this->service->_notify(_PAYMENT_);
 		if($ret !== false) {
-			echo runhook('pay_success', $ret);
+			echo runhook('pay_success', 1,$ret);
 		}
 	}
 
@@ -24,7 +24,7 @@ class index_control extends control {
 		$method = _PAYMENT_;
 		$ret = $this->service->_notify(_PAYMENT_);
 		if($ret !== false) {
-			echo runhook('pay_success', $ret);
+			echo runhook('pay_success', 1,$ret);
 		}
 	}
 

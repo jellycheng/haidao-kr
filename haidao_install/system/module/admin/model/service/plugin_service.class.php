@@ -123,7 +123,7 @@ class plugin_service extends service {
 				$result = $this->_upgrade($identifier,$branch_id);
 			}
 			$version = $this->plugin_db->where(array('branch_id' => $branch_id))->getfield('version');
-			$shop->_notify($branch_id,'upgrade',$version);
+			$shop->_notify($branch_id,'update',$version);
     	}
     	return TRUE;
     }
@@ -196,7 +196,7 @@ class plugin_service extends service {
 					$result = $archive->extract(PCLZIP_OPT_PATH, PLUGIN_PATH, PCLZIP_OPT_REPLACE_NEWER);
 					break;
 				case 'module':
-					$result = $archive->extract(PCLZIP_OPT_PATH, MODULES_PATH, PCLZIP_OPT_REPLACE_NEWER);
+					$result = $archive->extract(PCLZIP_OPT_PATH, APP_PATH.config('DEFAULT_H_LAYER').'/', PCLZIP_OPT_REPLACE_NEWER);
 					break;
 				case 'template':
 					$result = $archive->extract(PCLZIP_OPT_PATH, TPL_PATH, PCLZIP_OPT_REPLACE_NEWER);
@@ -277,19 +277,15 @@ class plugin_service extends service {
 						'parent_id' => $module['type'],
 						'name' => $module['menu'],
 						'sort' => $module['displayorder'],
-						'url' => url('admin/plugin/module', array('mod' => $module['name'])),
+						'url' => 'http://'.$_SERVER['HTTP_HOST'].'/index.php?m=admin&c=plugin&a=module&mod='.$module['name'],
 						'pluginid' => $pluginid,
 					);
 				}
 			}
 			if($nodes) $result = $this->load->table('node')->addAll($nodes);
-			if(!$result){
-				$this->code = -20005;
-				$this->error = '操作失败,请勿重复安装';
-				return false;
-			}
 			@unlink($plugin_folder.'/'.$xmldata['Data']['installfile']);
 			@unlink($plugin_folder.'/config.xml');
+			@unlink($plugin_folder.'/upgrade.xml');
 			/* 更新缓存 */
 			$this->build_cache();
 			return true;
@@ -315,7 +311,7 @@ class plugin_service extends service {
 		if($xmldata['Data']['plugin']['datatables']) $plugin_data['datatables'] = $xmldata['Data']['plugin']['datatables'];
 		if($xmldata['Data']['plugin']['directory']) $plugin_data['directory'] = $xmldata['Data']['plugin']['directory'];
 		if($xmldata['Data']['plugin']['copyright']) $plugin_data['copyright'] = $xmldata['Data']['plugin']['copyright'];
-		if($xmldata['Data']['plugin']['modules']) $plugin_data['modules'] = $xmldata['Data']['plugin']['modules'];
+		if($xmldata['Data']['plugin']['modules']) $plugin_data['modules'] = serialize($xmldata['Data']['plugin']['modules']);
 		if($xmldata['Data']['plugin']['version']) $plugin_data['version'] = $xmldata['Data']['plugin']['version'];
 		if($xmldata['Data']['plugin']['author']) $plugin_data['author'] = $xmldata['Data']['plugin']['author'];
 		
@@ -354,18 +350,15 @@ class plugin_service extends service {
 						'parent_id' => $module['type'],
 						'name' => $module['menu'],
 						'sort' => $module['displayorder'],
-						'url' => url('admin/plugin/module', array('mod' => $module['name'])),
+						'url' => 'http://'.$_SERVER['HTTP_HOST'].'/index.php?m=admin&c=plugin&a=module&mod='.$module['name'],
 						'pluginid' => $pluginid,
 					);
 				}
 			}
 			if($nodes) $result = $this->load->table('node')->addAll($nodes);
-			if(!$result){
-				$this->error = '操作失败';
-				return false;
-			}
 			@unlink($plugin_folder.'/'.$xmldata['Data']['upgradefile']);
 			@unlink($plugin_folder.'/upgrade.xml');
+			@unlink($plugin_folder.'/config.xml');
 			/* 更新缓存 */
 			$this->build_cache();
 			return true;
@@ -462,18 +455,19 @@ class plugin_service extends service {
 	 */
 	public function build_cache() {
 		$shop = new shop();
-		$lists = $shop->get_branch_auth();
+		$lists = $shop->get_branch_auth('plugin');
 		$branch = $end = array();
-		if($lists){
+		if($lists['lists']){
 			foreach ($lists['lists'] AS $list) {
-				if((TIMESTAMP < $list['start_time'] || TIMESTAMP > $list['end_time']) && $list['end_time'] > 0){
-					$end[] = (int)$list['branch_id'];
+				if((TIMESTAMP > $list['start_time'] && TIMESTAMP < $list['end_time']) || $list['end_time'] == 0){
+					$end[] = $list['branch_id'];
 				}
 			}
 		}
-		if($end){
-			$this->plugin_db->where(array('branch_id' => array('IN',$end)))->setField('available',0);
-		}
+		
+		$end[] = 0;
+		$this->plugin_db->where(array('branch_id' => array('NOT IN',$end)))->setField('available',0);
+		
 		$sqlmap = array();
 		$sqlmap['available'] = 1;
 		$tmp = $this->plugin_db->where($sqlmap)->select();
@@ -545,7 +539,9 @@ class plugin_service extends service {
 			    	foreach ($result['_history'] AS $_history) {
 			    		$versions[] = $_history['version'];
 			    	}
-	    			$plugins[$result['id']]['new_version'] = max($versions);
+			    	if($result['now_version'] < max($versions)){
+	    				$plugins[$result['id']]['new_version'] = max($versions);
+			    	}
 	    		}
 	    	}
 	    	cache('plugin_lists',$plugins,'common',array('expire' => 86400));

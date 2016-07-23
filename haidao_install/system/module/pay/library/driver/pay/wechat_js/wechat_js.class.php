@@ -53,7 +53,7 @@ class wechat_js extends pay_abstract {
     }
     public function getOpenid(){
         //触发微信返回code码
-        $redirectUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].url('pay/index/wechat',array('showwxpaytitle'=>1,'order_sn'=>$this->product_info['trade_sn'],'pay_code'=>'wechat_js')));
+        $redirectUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].url('pay/index/wechat',array('showwxpaytitle'=>1,'trade_no'=>$this->product_info['trade_sn'],'pay_code'=>'wechat_js')));
         $url_code = array();
         $url_code["appid"] = $this->config['appid'];
         $url_code["redirect_uri"] = $redirectUrl;

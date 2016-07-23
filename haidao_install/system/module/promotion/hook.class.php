@@ -1,5 +1,5 @@
 <?php
-class promotion_hook extends Hook
+class promotion_hook
 {
 	/* 控制器方法之前 */
 	public function pre_control() {

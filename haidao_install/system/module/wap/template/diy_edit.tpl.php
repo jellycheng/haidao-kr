@@ -11,7 +11,6 @@
 var upload_url = "<?php echo url('goods/admin/upload')?>"; //图片上传地址
 var upload_code = '<?php echo $attachment_init ?>';	//
 var hd_category = <?php echo json_encode($category) ?> ; //商品类别数据
-var hd_coupon = <?php echo json_encode(cache('coupon_activity')) ?>; //优惠券数据
 var config = {
 	"global": {
 		"libs": {
@@ -176,21 +175,7 @@ var config = {
 				}
 			}
 		}
-	},
-	<?php $modules = cache('module');$module = array_keys($modules);if(in_array('coupon', $module)){ ?>
-	"coupon": {
-		"name": "优惠券",
-		"libs": {
-			"form": {
-				"label": "优惠券：",
-				"name": "coupon",
-				"type": "hidden",
-				"required": "required"
-			},
-			"data": hd_coupon
-		}
 	}
-	<?php }?>
 }
 /*
 *diy->init(congig);//编译标签为预览HTML结构
@@ -198,7 +183,7 @@ var config = {
 *diy->submit();//反编译HTML结构为字符串 -> data-diy -> {diy 模块 标签 参数值（base64_encode）}
 */
 </script>
-
+<?php runhook('diy_edit_coupon');?>
 
 	<div class="fixed-nav layout">
 	    <ul>
@@ -345,26 +330,6 @@ var config = {
 			});
 			if(html) $(".goods-add-class").children(".focus").eq(level).html(html)
 		}
-		$(document).on('click', '.hd-add-coupon', function(){
-			var self = $(this);
-			top.dialog({
-				url: "<?php echo url('coupon/coupon/wap_coupons') ?>",
-				title: '加载中...',
-				data: self.nextAll("input").val(),
-				width: 681,
-				onclose: function(){
-					var $input = $('.hd-add-coupon').nextAll("input");
-					if(this.returnValue && this.returnValue.length > 0){
-						if($input.val()){
-							$input.val($input.val() + ',' + this.returnValue);
-						}else{
-							$input.val(this.returnValue);
-						}
-						diy.reload();
-					}
-				}
-			}).showModal();
-		});
 		
 	</script>
 </body>

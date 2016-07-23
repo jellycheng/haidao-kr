@@ -207,7 +207,6 @@ var hd_order = {
 				$("[data-sellerid="+ sellerid +"]").find("[data-id='remarks']").val(v);
 			});*/
 		}
-		hd_order.recount(); //重新计算价格
 	},
 	//加载收货地址列表
 	setAddress: function(){
@@ -388,39 +387,8 @@ var hd_order = {
 					title: D.invoiceTitle,	//发票抬头
 					content: D.invoiceCon	//发票内容
 				},
-				coupon:$('.wap-coupon').attr('data-code'),
-
 			}
 		return params;
-	},
-	//重新计算价格等
-	recount : function() {
-		$.getJSON('?m=order&c=order&a=get', hd_order.params(), function(ret) {
-			if(ret.status == 0) {
-				$.tips({icon: 'error',content: ret.message});
-			} else {
-				$("[data-show='real_amount']").text(ret.result.real_amount);
-				$("[data-show='sku_numbers']").text(ret.result.sku_numbers);
-				$.each(ret.result.skus ,function(sellerid, v) {
-					$("[data-sellerid="+ sellerid +"]").find("[data-show='delivery_price']").text(v.delivery_price);
-				});
-			}
-		})
-	},
-	//订单提交
-	doSubmit:function() {
-		$("[data-id='submit']").text('提交中...');
-		$.post('?m=order&c=order&a=create', hd_order.params(), function(ret) {
-			if(ret.status == 1) {
-				$("[data-id='submit']").text('提交成功');
-				setTimeout(window.location.href = ret.referer,500);
-				return false;
-			} else {
-				$.tips({icon: 'error',content: ret.message});
-				$("[data-id='submit']").text('重新提交');
-				return false;
-			}
-		}, 'json');
 	},
 	//转换为JSON对象
 	isJSON: function(D){

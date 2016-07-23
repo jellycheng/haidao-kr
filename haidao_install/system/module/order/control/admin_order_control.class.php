@@ -147,6 +147,9 @@ class admin_order_control extends init_control {
 	/* 取消订单 */
 	public function cancel() {
 		if (checksubmit('dosubmit')) {
+			$order_sn = model('order/order_sub')->where(array('sub_sn'=>$_GET['sub_sn']))->getField('order_sn');
+			model('order/order_trade')->where(array('order_sn'=>$order_sn))->setField('status',-1);
+
 			$result = $this->service_sub->set_order($_GET['sub_sn'] ,'order' ,2,array('msg'=>$_GET['msg'],'isrefund' => (int) $_GET['isrefund']));
 			if (!$result) showmessage($this->service_sub->error,'',0,'json');
 			showmessage(lang('order/cancel_order_success'),'',1,'json');

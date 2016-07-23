@@ -43,7 +43,7 @@ class template
             die('模板缓存文件('.$this->cachefile.')不可写');
         }
         if(defined('MOBILE')){
-            $template = runhook('tmpl_compile',$template);
+            runhook('tmpl_compile','',$template);
         }
         $template = "<?php if(!defined('IN_APP')) exit('Access Denied');?>\n$template";
         /* 无用 */
@@ -106,7 +106,11 @@ class template
             $fullfile = APP_PATH.config('DEFAULT_H_LAYER').'/'.$module.'/template/'.$tplfile.'.tpl.php';
         }
          if(!is_file($fullfile)) {
-            $fullfile =  APP_PATH.config('DEFAULT_H_LAYER').'/'.$module.'/template/'.$this->theme.'/'.$tplfile.config('TMPL_TEMPLATE_SUFFIX');
+            if(!defined('MOBILE')){
+                $fullfile =  APP_PATH.config('DEFAULT_H_LAYER').'/'.$module.'/template/default/'.$tplfile.config('TMPL_TEMPLATE_SUFFIX');
+            }else{
+                $fullfile =  APP_PATH.config('DEFAULT_H_LAYER').'/'.$module.'/template/wap/'.$tplfile.config('TMPL_TEMPLATE_SUFFIX');
+            }
         }
 
         if(!is_file($fullfile)) {
@@ -231,9 +235,9 @@ class template
         */
 
         if(!$key){
-            $this->replacecode['replace'][$i] = "<?php {$dev}echo runhook('$hookid');?>";
+            $this->replacecode['replace'][$i] = "<?php {$dev}echo runhook('$hookid','1');?>";
         }else{
-            $this->replacecode['replace'][$i] = "<?php {$dev}\$$key = runhook('$hookid');?>";
+            $this->replacecode['replace'][$i] = "<?php {$dev}\$$key = runhook('$hookid','1');?>";
             
         }
         return $search;

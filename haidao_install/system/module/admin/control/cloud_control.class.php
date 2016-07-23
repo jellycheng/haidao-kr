@@ -21,11 +21,11 @@ class cloud_control extends init_control
 	}
 	public function bulid(){
 		if(checksubmit('dosubmit')) {
-			$r = $this->service->getMemberLogin($_GET['account'], $_GET['password']);
-			if($r){
-				showmessage(lang('_operation_success_'), url('index'), 1);
+			$result = $this->service->getMemberLogin($_GET['account'], $_GET['password']);
+			if($result){
+				showmessage(lang('_operation_success_'), url('index'), 1,$result);
 			}else{
-				showmessage(lang('_operation_fail_'), url('index'), 0);
+				showmessage($this->service->error, url('index'), 0);
 			}
 		}else{
 			include $this->admin_tpl('cloud_bulid');
@@ -48,5 +48,13 @@ class cloud_control extends init_control
 			$r = $cloud ? $this->service->getcloudstatus() : false ;
 		}
 		showmessage('', '', $r);
+	}
+	public function bind(){
+		$result = $this->service->site_bind($_GET['identifier']);
+		if($result){
+			showmessage('绑定成功','',1);
+		}else{
+			showmessage($this->service->error,'',0);
+		}
 	}
 }

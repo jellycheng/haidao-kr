@@ -123,7 +123,7 @@ $("#subbtn").live('click',function(){
 		title: '提示信息',
 		width: 330,
 		okValue: '完成付款',
-		cancelValue: '返回选择其他银行',
+		cancelValue: '返回选择其他支付方式',
 		ok: function(){
 			$.getJSON('?m=order&c=order&a=get_pay_status', {order_sn:"<?php echo $order_sn; ?>"}, function(ret) {
 				if(ret.status == 0) {

@@ -85,7 +85,7 @@ class account_control extends cp_control
 			if(!$result){
 				showmessage($this->member_service->error);
 			}
-			showmessage(lang('member/edit_mobile_success'),'',1);
+			showmessage(lang('member/edit_mobile_success'),url('safe'),1);
 		}else{
 			$sms_enabled = model('notify')->where(array('code'=>'sms','enabled'=>1))->find();
 			$mobile_validate = false;

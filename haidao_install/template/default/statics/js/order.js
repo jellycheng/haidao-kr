@@ -9,11 +9,6 @@ var hd_order = (function() {
 		$(this).remove();
 	});
 
-	/* 点击提交按钮 */
-	$("#submit").live('click',function(){
-		hd_order._dosubmit();
-	});
-
 	return {
 		init : function() {
 			// 默认选中支付方式
@@ -48,9 +43,7 @@ var hd_order = (function() {
 					invoice: $("[data-model=invoices]").find(".selected").data('invoice'),
 					title: $("[data-model=invoice_title]").attr('value'),
 					content: $("[data-model=invoice_content]").find(".selected").data('value')
-				},
-				/*优惠券*/
-				coupon:$("[data-model='coupon']").attr('data-code'),
+				}
 			}
 			$("[data-sellerid]").each(function(i , n){
 				var _sellerid = $(this).data('sellerid');
@@ -66,8 +59,8 @@ var hd_order = (function() {
 			return params;
 		},
 
-		_get : function() {
-			$.getJSON('?m=order&c=order&a=get', hd_order._params(), function(ret) {
+		_get : function(param) {
+			$.getJSON('?m=order&c=order&a=get',param, function(ret) {
 				if(ret.status == 0) {
 					// $.tips('');
 				} else {
@@ -149,20 +142,5 @@ var hd_order = (function() {
 			})
 		},
 
-		/* 订单提交 */
-		_dosubmit:function() {
-			if($("#submit").hasClass('gray-btn')) return false;
-			$("#submit").addClass('gray-btn').text('创建订单中...');
-			$.post('?m=order&c=order&a=create', hd_order._params(), function(ret) {
-				if(ret.status == 1) {
-					$("#submit").text('订单创建成功');
-					setTimeout(window.location.href = ret.referer,500);
-				} else {
-					$.dialogTip({content: ret.message});
-					$("#submit").removeClass('gray-btn').text('重新提交');
-					return false;
-				}
-			}, 'json');
-		}
 	};
 })();

@@ -3,3 +3,10 @@
 <?PHP exit;?>	UCenterAdministrator	192.168.33.1	1468695925	app_edit	appid=1
 <?PHP exit;?>	UCenterAdministrator	192.168.33.1	1468695941	app_edit	appid=1
 <?PHP exit;?>	UCenterAdministrator	192.168.33.1	1468697701	app_edit	appid=1
+<?PHP exit;?>	UCenterAdministrator	192.168.33.1	1468732468	login	succeed
+<?PHP exit;?>	UCenterAdministrator	192.168.33.1	1468733204	app_edit	appid=1
+<?PHP exit;?>	UCenterAdministrator	192.168.33.1	1468733227	app_edit	appid=1
+<?PHP exit;?>	UCenterAdministrator	192.168.33.1	1468766361	login	succeed
+<?PHP exit;?>	UCenterAdministrator	192.168.33.1	1469200703	login	succeed
+<?PHP exit;?>	UCenterAdministrator	192.168.33.1	1469200838	app_edit	appid=1
+<?PHP exit;?>	UCenterAdministrator	192.168.33.1	1469200852	app_edit	appid=1

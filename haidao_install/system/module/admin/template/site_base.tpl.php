@@ -18,7 +18,7 @@
 		<?php echo Form::input('text', 'site_name', $setting['site_name'], '쇼핑몰이름：', '쇼핑몰이름，웹브라우저창 제목위치에 노출됩니다'); ?>
 		<?php echo Form::input('text', 'com_name', $setting['com_name'], '회사이름：', '사이트이름，페이지하단 연락처부분에 표시됩니다'); ?>
 		<?php echo Form::input('text', 'site_url', $setting['site_url'], '쇼핑몰URL：', '쇼핑몰 URL，페이지하에 표기됩니다，http://로 시작'); ?>
-		<?php echo Form::input('text', 'icp', $setting['icp'], '쇼핑몰허가 정보코드(备案信息)：', '페이지하단에 ICP허가정보가 표기됩니다，판매허가된 경우，입력란에 허가번호를 입력하세요. 없으면 비워주세요'); ?>
+<!--		--><?php //echo Form::input('text', 'icp', $setting['icp'], '쇼핑몰허가 정보코드(备案信息)：', '페이지하단에 ICP허가정보가 표기됩니다，판매허가된 경우，입력란에 허가번호를 입력하세요. 없으면 비워주세요'); ?>
 		<?php echo Form::input('radio', 'site_isclosed', $setting['site_isclosed'], '쇼핑몰 운영상태：', '잠시 쇼핑몰 운영정지，방문자의 사이트 방문을 제한합니다，관리자방문에는 영향주지 않습니다', array('items' => array('1'=>'열기', '0'=>'닫기'), 'colspan' => 2,)); ?>
 	    <?php echo Form::input('textarea', 'site_closedreason', $setting['site_closedreason'], '사이트 임시중지 사유를 입력하세요.'); ?>
 		 <?php echo Form::input('textarea', 'site_statice', $setting['site_statice'], '쇼핑몰 제3자통계코드：','페이지 하단에 제3자통계코드를 표기합니다'); ?>

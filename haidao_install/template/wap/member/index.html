@@ -86,6 +86,16 @@
 					<p class="mui-pull-right">修改密码</p>
 				</a>
 			</li>
+			{hook/wap_member_index_extra_info data}
+			{loop $data $menu}
+			<li class="mui-table-view-cell">
+				<a href="{$menu[url]}" class="mui-navigate-right">
+					<span class="icon-20"><img src="{$menu[ico]}" /></span>
+					<span class="hd-h4">{$menu[name]}</span>
+					<p class="mui-pull-right">{$menu[desc]}</p>
+				</a>
+			</li>
+			{/loop}
 		</ul>
 	    <div class="margin padding-small">
 	    	<a href="{url('member/public/logout')}" class="mui-btn mui-btn-blue full mui-h4">退出当前账号</a>

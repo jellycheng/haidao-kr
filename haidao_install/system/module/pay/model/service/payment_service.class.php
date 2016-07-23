@@ -94,7 +94,7 @@ class payment_service extends service {
 		if(FALSE === cache('payment_enable'))$this->build_cache();
 		$payments = cache('payment_enable');
 		foreach ($payments as $key => $pay) {
-			if($applie && $pay['applie'] != 'all' && $pay['applie'] != $applie) unset($payments[$key]);
+			if($applie && $pay['applie'] != $applie) unset($payments[$key]);
 		}
 		$payments = array_intersect_key($payments,array_flip($pays));
 		$result = array();
@@ -111,7 +111,7 @@ class payment_service extends service {
 				}
 			} elseif ($k == 'jdpay'){
 				$config = unserialize($pay['config']);
-				if($config['applie'] == 'all' || $config['applie'] == $applie){
+				if($pay['applie'] == $applie){
 					$banks = explode(',', $config['banks']);
 					$jd_applies = explode(',',$config['applie']);
 					foreach ($banks as $bank) {

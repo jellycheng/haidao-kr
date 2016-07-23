@@ -67,12 +67,13 @@ class order_control extends init_control {
     public function cancel() {
         if (checksubmit('dosubmit')) {
             $sub_sn = remove_xss($_GET['sub_sn']);
-            $order = $this->table_sub->field('buyer_id')->where(array('sub_sn' => $sub_sn))->find();
+            $order = $this->table_sub->field('buyer_id,order_sn')->where(array('sub_sn' => $sub_sn))->find();
             if ($order['buyer_id'] != $this->member['id']) {
                 showmessage(lang('member/no_promission_operate_order'));
             }
             $result = $this->service_sub->set_order($sub_sn ,$action = 'order',$status = 2 ,array('msg'=>'用户取消订单','isrefund' => 1));
             if (!$result) showmessage($this->service_sub->error);
+            model('order/order_trade')->where(array('order_sn'=>$order['order_sn']))->setField('status',-1);
             showmessage(lang('order/cancel_order_success'),'',1,'json');
         } else {
             showmessage(lang('_error_action_'));

@@ -1,5 +1,5 @@
 <?php
-class goods_hook extends Hook
+class goods_hook
 {
 	/**
 	 * 系统初始化钩子
@@ -24,20 +24,20 @@ class goods_hook extends Hook
 
 	public function pre_response(){}
 
-	public function pre_input($data){
+	public function pre_input(){
 		
 	}
 	/**
 	 * 登陆成功之后:{加入购物车、发送推送邮件等等}
 	 */
-	public function after_login($params) {
+	public function after_login(&$params) {
 		model('order/cart','service')->cart_sync($params['id']);
 		model('member/member','service')->change_group($params['id']);
 	}
 	/**
 	 * 注册成功之后:{加入购物车、发送推送邮件等等}
 	 */
-	public function after_register($mid){
+	public function after_register(&$mid){
 		model('order/cart','service')->cart_sync($mid);
 		$member = array();
 		$member['member'] = model('member/member')->where(array('id' => $mid))->find();

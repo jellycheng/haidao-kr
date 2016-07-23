@@ -25,6 +25,7 @@ class order_service extends service {
 		$this->service_goods_sku = $this->load->service('goods/goods_sku');
 		$this->service_payment = $this->load->service('pay/payment');
 		$this->service_member = $this->load->service('member/member');
+        $this->service_order_trade = $this->load->service('order/order_trade');
 		$this->member = $this->service_member->init();
 	}
 
@@ -168,6 +169,7 @@ class order_service extends service {
 		$carts['promot_total'] = sprintf("%.2f", -$promot_total);
 		/* 订单应付总额 */
 		$carts['real_amount'] = sprintf("%.2f", max(0,$carts['sku_total'] + $carts['deliverys_total'] + $carts['invoice_tax'] - $promot_total));
+		runhook('coupon_total','',$carts);
 		if($submit === true) { // 写入订单表
 			/* 创建主订单 */
 			// 读取收货人信息
@@ -232,7 +234,7 @@ class order_service extends service {
 			$member = array();
 			$member['member'] = $this->load->table('member/member')->where(array('id' => $buyer_id))->find();
 			$member['order_sn'] = $order_sn;
-			runhook('create_order',$member);
+			runhook('create_order','',$member);
 			return $order_sn;
 		} else {
 			return $carts;
@@ -560,15 +562,18 @@ class order_service extends service {
 		/* 需要再用网银支付的 */
 		$result = array();
 		if ($total_fee > 0) {
-			$pay_info = array();
-			$pay_info['trade_sn']  = $sn;
-			$pay_info['total_fee'] = $total_fee;
-			$pay_info['subject']   = '订单号：'.$sn;
-			$pay_info['pay_bank']  = $pay_bank;
+            $trade_no = $this->service_order_trade->get_trade_no($sn,$total_fee,$pay_code);
+
+            $pay_info = array();
+            $pay_info['trade_sn']  = $trade_no;
+            $pay_info['total_fee'] = $total_fee;
+            $pay_info['subject']   = '订单支付号：'.$trade_no;
+            $pay_info['pay_bank']  = $pay_bank;
 			/* 请求支付 */
 			$gateway = $this->service_payment->gateway($pay_code,$pay_info);
 			if($gateway === false) showmessage(lang('pay/pay_set_error'));
 			$gateway['order_sn'] = $sn;
+            $gateway['trade_no'] = $trade_no;
 			$gateway['total_fee'] = $total_fee;
 		} else {
 			// 设置订单为支付状态
