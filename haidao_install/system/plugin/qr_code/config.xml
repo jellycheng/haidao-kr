@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="Data">
+		<item id="plugin">
+			<item id="available"><![CDATA[0]]></item>
+			<item id="adminid"><![CDATA[0]]></item>
+			<item id="name"><![CDATA[商品二维码]]></item>
+			<item id="identifier"><![CDATA[qr_code]]></item>
+			<item id="description"><![CDATA[配合移动端，为每一个SKU商品地址生产一个独立的二维码，当规格出现变化导致地址改变，二维码会自动重新生成。]]></item>
+			<item id="datatables"><![CDATA[]]></item>
+			<item id="directory"><![CDATA[qr_code/]]></item>
+			<item id="copyright"><![CDATA[海盗云商]]></item>
+			<item id="modules">
+				<item id="0">
+					<item id="displayorder"><![CDATA[200]]></item>
+					<item id="type"><![CDATA[5]]></item>
+					<item id="name"><![CDATA[qr_code]]></item>
+					<item id="menu"><![CDATA[商品二维码]]></item>
+					<item id="url"><![CDATA[]]></item>
+				</item>
+				<item id="1">
+					<item id="displayorder"><![CDATA[1]]></item>
+					<item id="type"><![CDATA[hook]]></item>
+					<item id="name"><![CDATA[hook]]></item>
+					<item id="menu"><![CDATA[]]></item>
+					<item id="url"><![CDATA[]]></item>
+				</item>
+			</item>
+			<item id="version"><![CDATA[1.0.0]]></item>
+			<item id="author"><![CDATA[海盗云商开发团队]]></item>			
+		</item>
+		<item id="installfile"><![CDATA[install.php]]></item>
+		<item id="uninstallfile"><![CDATA[uninstall.php]]></item>
+	</item>
+</root>

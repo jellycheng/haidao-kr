@@ -17,6 +17,7 @@ foreach ($orders as $order_id => $order) {
         $order_ids[] = $order_id;
     }
 }
+helper('order/function');
 if(empty($order_ids)) return false;
 $sub_orders = model('order/order_sub')->where(array('order_id'=>array('IN',$order_ids)))->getField('sub_sn',true);
 foreach ($sub_orders as $k => $sub_sn) {

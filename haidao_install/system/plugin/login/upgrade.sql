@@ -1,1 +1,0 @@
-INSERT INTO `hd_member_oauth` VALUES ('8888', '232', 'sdadsa', '1467820734', '');

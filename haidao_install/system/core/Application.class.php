@@ -209,7 +209,7 @@ class Application extends Base {
 		$plugin_hooks = array_keys(cache('hooks'));
 		$hooks = (!empty($module_hooks) && !empty($plugin_hooks)) ? array_merge($module_hooks,$plugin_hooks) : $module_hooks;
 		foreach ($hooks AS $hookname) {
-			if($hookname == 'ucenter' || $hookname == 'testdata'){
+			if($hookname == 'ucenter'){
 				@unlink(APP_PATH.'plugin/'.$hookname.'/include/hook.inc.php');
 			}
             if(in_array($hookname,$module_hooks)){
