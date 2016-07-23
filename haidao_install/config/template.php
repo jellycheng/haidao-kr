@@ -16,7 +16,7 @@
 
 return array(
 
-	'TPL_THEME'                     => 'default',
+	'TPL_THEME'                     => 'inbay',
 	'TPL_SUFFIX'                    => '.html',
 	'TAGLIB_BEGIN'                  => '{',
 	'taglib_end'                    => '}',
